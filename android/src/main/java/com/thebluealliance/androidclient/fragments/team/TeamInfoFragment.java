@@ -14,15 +14,21 @@ import android.widget.Toast;
 import com.thebluealliance.androidclient.R;
 import com.thebluealliance.androidclient.activities.ViewTeamActivity;
 import com.thebluealliance.androidclient.background.PopulateTeamInfo;
+import com.thebluealliance.androidclient.interfaces.LoadingFinishListener;
 import com.thebluealliance.androidclient.interfaces.RefreshableActivityListener;
 
 import java.util.List;
 
-public class TeamInfoFragment extends Fragment implements View.OnClickListener, RefreshableActivityListener {
+public class TeamInfoFragment extends Fragment implements View.OnClickListener, RefreshableActivityListener, LoadingFinishListener {
 
     private String mTeamKey;
 
     private PopulateTeamInfo task;
+
+    private View mProgressBar;
+    private View mContent;
+
+    private int mShortAnimationDuration;
 
     public TeamInfoFragment() {
         // Empty constructor
@@ -35,6 +41,7 @@ public class TeamInfoFragment extends Fragment implements View.OnClickListener, 
         if (mTeamKey == null) {
             throw new IllegalArgumentException("TeamInfoFragment must be created with a team key!");
         }
+        mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
     }
 
     @Override
@@ -43,19 +50,18 @@ public class TeamInfoFragment extends Fragment implements View.OnClickListener, 
         // Register this fragment as the callback for all clickable views
         v.findViewById(R.id.team_location_container).setOnClickListener(this);
         v.findViewById(R.id.team_twitter_button).setOnClickListener(this);
+        v.findViewById(R.id.team_youtube_button).setOnClickListener(this);
         v.findViewById(R.id.team_most_recent_match_details).findViewById(R.id.match_video).setOnClickListener(this);
+        mProgressBar = v.findViewById(R.id.progress_bar);
+        mContent = v.findViewById(R.id.content);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mContent.setVisibility(View.GONE);
         return v;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //new PopulateTeamInfo(this, mTeamKey).execute();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         task = new PopulateTeamInfo(getActivity(), this, mTeamKey);
         task.execute();
     }
@@ -112,5 +118,19 @@ public class TeamInfoFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onRefreshStop() {
         task.cancel(false);
+    }
+
+    @Override
+    public void onLoadFinish() {
+        fadeInContent();
+    }
+
+    public void fadeInContent() {
+        mContent.setAlpha(0f);
+        mContent.setVisibility(View.VISIBLE);
+
+        mContent.animate().alpha(1f).setDuration(mShortAnimationDuration).setListener(null);
+
+        mProgressBar.setVisibility(View.GONE);
     }
 }

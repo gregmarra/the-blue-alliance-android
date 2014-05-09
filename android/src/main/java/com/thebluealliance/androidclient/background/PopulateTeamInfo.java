@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.thebluealliance.androidclient.R;
 import com.thebluealliance.androidclient.datafeed.DataManager;
+import com.thebluealliance.androidclient.interfaces.LoadingFinishListener;
 import com.thebluealliance.androidclient.models.Team;
 
 /**
@@ -101,6 +102,10 @@ public class PopulateTeamInfo extends AsyncTask<Void, String, Void> {
                     view.findViewById(R.id.team_next_match_details).setVisibility(View.GONE);
                 }
             }
+        }
+
+        if (mFragment instanceof LoadingFinishListener) {
+            ((LoadingFinishListener) mFragment).onLoadFinish();
         }
     }
 

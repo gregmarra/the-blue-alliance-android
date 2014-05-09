@@ -2,7 +2,6 @@ package com.thebluealliance.androidclient.background;
 
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.widget.ListView;
 
 import com.thebluealliance.androidclient.R;
@@ -35,7 +34,6 @@ public class PopulateTeamList extends AsyncTask<Integer, String, Void> {
     protected Void doInBackground(Integer... params) {
         int start = params[0];
         int end = params[1];
-        Log.d("doInBackground", "is cancelled? " + isCancelled());
         if (!isCancelled()) {
             try {
                 ArrayList<SimpleTeam> teams = DataManager.getSimpleTeamsInRange(fragment.getActivity(), start, end);
@@ -53,11 +51,6 @@ public class PopulateTeamList extends AsyncTask<Integer, String, Void> {
                 e.printStackTrace();
             }
         }
-        if (!isCancelled()) {
-            adapter = new ListViewAdapter(fragment.getActivity(), teamItems, teamKeys);
-
-            adapter.notifyDataSetChanged();
-        }
         return null;
     }
 
@@ -69,7 +62,12 @@ public class PopulateTeamList extends AsyncTask<Integer, String, Void> {
         //android gets angry if you modify Views off the UI thread, so we do the actual View manipulation here
         if (fragment.getView() != null) {
             ListView eventList = (ListView) fragment.getView().findViewById(R.id.team_list);
-            eventList.setAdapter(adapter);
+            if (eventList.getAdapter() != null) {
+                ((ListViewAdapter) eventList.getAdapter()).updateContent(teamItems, teamKeys);
+            } else {
+                adapter = new ListViewAdapter(fragment.getActivity(), teamItems, teamKeys);
+                eventList.setAdapter(adapter);
+            }
         }
     }
 }

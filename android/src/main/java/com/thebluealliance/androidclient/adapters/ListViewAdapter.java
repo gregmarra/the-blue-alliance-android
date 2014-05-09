@@ -29,6 +29,12 @@ public class ListViewAdapter extends ArrayAdapter<ListItem> {
         mInflater = LayoutInflater.from(context);
     }
 
+    public void updateContent(ArrayList<ListItem> values, ArrayList<String> keys) {
+        this.values = values;
+        this.keys = keys;
+        notifyDataSetChanged();
+    }
+
     public void removeAt(int index) {
         if (index >= 0) {
             values.remove(index);

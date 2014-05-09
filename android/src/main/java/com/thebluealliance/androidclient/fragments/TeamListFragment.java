@@ -22,6 +22,8 @@ public class TeamListFragment extends Fragment {
     private static final String START = "START";
     private static final String END = "END";
 
+    private int[] scrollPosition = new int[2];
+
     private int mTeamNumberStart, mTeamNumberEnd;
 
     private PopulateTeamList task;
