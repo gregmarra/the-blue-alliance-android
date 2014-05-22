@@ -1,6 +1,5 @@
 package com.thebluealliance.androidclient.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -83,10 +82,7 @@ public class EventListFragment extends Fragment {
                 if(item != null && item instanceof ListElement) {
                     // only open up the view event activity if the user actually clicks on a ListElement
                     // (as opposed to something inheriting from ListHeader, which shouldn't do anything on user click
-                    Intent intent = new Intent(getActivity(), ViewEventActivity.class);
-                    String eventKey = ((ListElement) item).getKey();
-                    intent.putExtra("eventKey", eventKey);
-                    startActivity(intent);
+                    startActivity(ViewEventActivity.newInstance(getActivity(), ((ListElement) item).getKey()));
                 }else{
                     Log.d(Constants.LOG_TAG, "ListHeader clicked. Ignore...");
                 }

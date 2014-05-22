@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.thebluealliance.androidclient.Constants;
 import com.thebluealliance.androidclient.R;
 import com.thebluealliance.androidclient.adapters.ViewTeamFragmentPagerAdapter;
 import com.thebluealliance.androidclient.datafeed.ConnectionDetector;
@@ -26,7 +28,7 @@ public class ViewTeamActivity extends RefreshableHostActivity {
     private String mTeamKey;
 
     public static Intent newInstance(Context context, String teamKey) {
-        System.out.println("making intent for " + teamKey);
+        Log.d(Constants.LOG_TAG, "making intent for " + teamKey);
         Intent intent = new Intent(context, ViewTeamActivity.class);
         intent.putExtra(TEAM_KEY, teamKey);
         return intent;

@@ -1,12 +1,16 @@
 package com.thebluealliance.androidclient.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.thebluealliance.androidclient.Constants;
 import com.thebluealliance.androidclient.R;
 import com.thebluealliance.androidclient.adapters.ViewEventFragmentPagerAdapter;
 import com.thebluealliance.androidclient.datafeed.ConnectionDetector;
@@ -20,13 +24,22 @@ public class ViewEventActivity extends RefreshableHostActivity {
     private TextView warningMessage;
     private ViewPager pager;
 
+    public static final String EVENT_KEY = "eventKey";
+
+    public static Intent newInstance(Context c, String eventKey){
+        Log.d(Constants.LOG_TAG, "making intent for " + eventKey);
+        Intent intent = new Intent(c, ViewTeamActivity.class);
+        intent.putExtra(EVENT_KEY, eventKey);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
 
         if (getIntent().getExtras() != null) {
-            mEventKey = getIntent().getExtras().getString("eventKey", "");
+            mEventKey = getIntent().getExtras().getString(EVENT_KEY, "");
         }
 
         warningMessage = (TextView) findViewById(R.id.warning_container);
